@@ -32,5 +32,27 @@ public:
 	void write_green1_pgm(const char* filename);
 	void write_green2_pgm(const char* filename);
 	void write_blue_pgm(const char* filename);
+
+	unsigned int get_width() {
+		return _width;
+	}
+	unsigned int get_height() {
+		return _height;
+	}
+	unsigned int get_total_pixels() {
+		return _total_pixels;
+	}
+	uint16_t* get_red_channel_16bits() {
+		return red_channel;
+	}
+	uint16_t* get_green1_channel_16bits() {
+		return green1_channel;
+	}
+	uint16_t* get_green2_channel_16bits() {
+		return green2_channel;
+	}
+	uint16_t* get_blue_channel_16bits() {
+		return blue_channel;
+	}
 	~RAW12();
 };
