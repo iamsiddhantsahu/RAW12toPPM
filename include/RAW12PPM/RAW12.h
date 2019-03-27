@@ -9,12 +9,11 @@ private:
 	unsigned int _width, _height;
 	unsigned int _total_pixels, _size_in_bytes;
 
-	uint16_t* red_channel, *green1_channel, *green2_channel, *blue_channel;
-	uint8_t* red_channel_8bits, *green1_channel_8bits, *green2_channel_8bits, *blue_channel_8bits;
+	uint16_t* red_channel_12bits, *green1_channel_12bits, *green2_channel_12bits, *blue_channel_12bits;
 
 	std::ifstream RAW12_file;
 
-	uint16_t* buffer_16bits; 
+	uint16_t* buffer_16bits;
 	uint8_t* buffer_8bits;
 
 	uint16_t* result_12bits;
@@ -24,14 +23,7 @@ public:
 	RAW12();
 	RAW12(const char* RAW12_filename, int width, int height);
 	void buffer_8bits_to_12bits();
-	void seperate_channels();
-	void debayer_nearest_neighbour();
-	void debayer_bilinear();
-	void write_ppm(const char* PPM_filename);
-	void write_red_pgm(const char* filename);
-	void write_green1_pgm(const char* filename);
-	void write_green2_pgm(const char* filename);
-	void write_blue_pgm(const char* filename);
+	void extract_channels();
 
 	unsigned int get_width() {
 		return _width;
@@ -42,17 +34,17 @@ public:
 	unsigned int get_total_pixels() {
 		return _total_pixels;
 	}
-	uint16_t* get_red_channel_16bits() {
-		return red_channel;
+	uint16_t* get_red_channel_12bits() {
+		return red_channel_12bits;
 	}
-	uint16_t* get_green1_channel_16bits() {
-		return green1_channel;
+	uint16_t* get_green1_channel_12bits() {
+		return green1_channel_12bits;
 	}
-	uint16_t* get_green2_channel_16bits() {
-		return green2_channel;
+	uint16_t* get_green2_channel_12bits() {
+		return green2_channel_12bits;
 	}
-	uint16_t* get_blue_channel_16bits() {
-		return blue_channel;
+	uint16_t* get_blue_channel_12bits() {
+		return blue_channel_12bits;
 	}
 	~RAW12();
 };

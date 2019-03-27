@@ -1,14 +1,16 @@
-#include "RAW12.h"
+#include "RAW12PPM/RAW12.h"
 
 RAW12::RAW12()
 	: filename(nullptr), _width(0), _height(0) {
 }
 
-RAW12::RAW12(const char* RAW12_filename, int width, int height) 
+RAW12::RAW12(const char* RAW12_filename, int width, int height)
 	: filename(RAW12_filename), _width(width), _height(height) {
 
 	std::cout << "Filename = " << filename << "\n";
+	std::cout << "----------------------------\n"
 	std::cout << "Width = " << _width << "\n";
+	std::cout << "Height = " << _height << "\n";
 	_total_pixels = _width * _height;
 	std::cout << "Total Pixels = " << _total_pixels << "\n";
 	_size_in_bytes = (_width * _height * 12) / 8;
@@ -20,12 +22,12 @@ RAW12::RAW12(const char* RAW12_filename, int width, int height)
 	}
 
 	buffer_8bits = new uint8_t[_size_in_bytes]; //create 8bits buffer
-	RAW12_file.read(reinterpret_cast<char*>(buffer_8bits), _size_in_bytes);
+	RAW12_file.read(reinterpret_cast<char*>(buffer_8bits), _size_in_bytes); //store the RAW12 image in 8bits buffer
 }
 
 /* Data in buffer_8bits
 |               |               |               |
-|R|R|R|R|R|R|R|R|R|R|R|R|G|G|G|G|G|G|G|G|G|G|G|G| 
+|R|R|R|R|R|R|R|R|R|R|R|R|G|G|G|G|G|G|G|G|G|G|G|G|
 |<----8bits---->|<4bits>|<4bits>|<----8bits---->|
 */
 void RAW12::buffer_8bits_to_12bits() {
@@ -39,7 +41,7 @@ void RAW12::buffer_8bits_to_12bits() {
 		//std::cout << "Inside for loop\n";
 		if (counter_16bits % 2 == 0) { //for red_channel and green2_channnel
 			buffer_16bits[counter_16bits] = buffer_8bits[counter_8bits];
-			/* Data in buffer_12bits 
+			/* Data in buffer_12bits
 			|               |               |
 			|-|-|-|-|-|-|-|-|R|R|R|R|R|R|R|R|
 			*/
@@ -49,7 +51,7 @@ void RAW12::buffer_8bits_to_12bits() {
 			|-|-|-|-|R|R|R|R|R|R|R|R|-|-|-|-|
 			*/
 			buffer_16bits[counter_16bits] = (buffer_16bits[counter_16bits] | ((buffer_8bits[counter_8bits + 1] >> 4) & 0x0F));
-			/* Data in buffer_12bits after bitwiseOR with (right shifted 4bits next byte in buffer_8bits and bitwiseAND of 0x0F)  
+			/* Data in buffer_12bits after bitwiseOR with (right shifted 4bits next byte in buffer_8bits and bitwiseAND of 0x0F)
 			|               |               |
 			|-|-|-|-|R|R|R|R|R|R|R|R|R|R|R|R|
 			*/
@@ -83,7 +85,7 @@ void RAW12::buffer_8bits_to_12bits() {
 	std::cout << "End of buffer_8bits_to_12bits() function\n";
 }
 
-void RAW12::seperate_channels() {
+void RAW12::extract_channels() {
 	std::cout << "Inside seperate_channels() function\n";
 	red_channel = new uint16_t[_total_pixels / 4];
 	green1_channel = new uint16_t[_total_pixels / 4];
@@ -174,7 +176,7 @@ void RAW12::write_ppm(const char* filename) {
 		std::cout << "Started Converting 12bpc to 8bpc\n";
 		for (unsigned long int index = 0; index < (_total_pixels * 3); index++) {
 			result_8bits[index] = (result_12bits[index]) >> 4;
-			//std::cout << (unsigned)result_8bits[index] << " "; 
+			//std::cout << (unsigned)result_8bits[index] << " ";
 		}
 		std::cout << "Converted 12bpc to 8bpc\n";
 
@@ -209,7 +211,7 @@ void RAW12::write_red_pgm(const char* filename) {
 		std::cout << "Started Converting 12bpc to 8bpc\n";
 		for (unsigned long int index = 0; index < (_total_pixels / 4); index++) {
 			red_channel_8bits[index] = (red_channel[index]) >> 4;
-			//std::cout << (unsigned)result_8bits[index] << " "; 
+			//std::cout << (unsigned)result_8bits[index] << " ";
 		}
 		std::cout << "Converted 12bpc to 8bpc\n";
 
@@ -244,7 +246,7 @@ void RAW12::write_green1_pgm(const char* filename) {
 		std::cout << "Started Converting 12bpc to 8bpc\n";
 		for (unsigned long int index = 0; index < (_total_pixels / 4); index++) {
 			green1_channel_8bits[index] = (green1_channel[index]) >> 4;
-			//std::cout << (unsigned)result_8bits[index] << " "; 
+			//std::cout << (unsigned)result_8bits[index] << " ";
 		}
 		std::cout << "Converted 12bpc to 8bpc\n";
 
@@ -279,7 +281,7 @@ void RAW12::write_green2_pgm(const char* filename) {
 		std::cout << "Started Converting 12bpc to 8bpc\n";
 		for (unsigned long int index = 0; index < (_total_pixels / 4); index++) {
 			green2_channel_8bits[index] = (green2_channel[index]) >> 4;
-			//std::cout << (unsigned)result_8bits[index] << " "; 
+			//std::cout << (unsigned)result_8bits[index] << " ";
 		}
 		std::cout << "Converted 12bpc to 8bpc\n";
 
@@ -314,7 +316,7 @@ void RAW12::write_blue_pgm(const char* filename) {
 		std::cout << "Started Converting 12bpc to 8bpc\n";
 		for (unsigned long int index = 0; index < (_total_pixels / 4); index++) {
 			blue_channel_8bits[index] = (blue_channel[index]) >> 4;
-			//std::cout << (unsigned)result_8bits[index] << " "; 
+			//std::cout << (unsigned)result_8bits[index] << " ";
 		}
 		std::cout << "Converted 12bpc to 8bpc\n";
 
