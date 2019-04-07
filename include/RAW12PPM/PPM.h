@@ -1,8 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include "Debayer.h"
-#include "RAW12.h"
+#include "Debayer/Debayer.h"
+#include "RAW12PPM/RAW12.h"
 
 enum Channel {
 	RED,
@@ -30,5 +30,5 @@ public:
 	PPM(Debayer& DebayeredImage, RAW12& RAW12Image);
 	void print_5X5();
 	void write_pgm(const char* filename, Channel channel); //for grayscale (red, green1, green2, blue)
-	void write_ppm(const char* filename); 
+	void write_ppm(const char* filename);
 };

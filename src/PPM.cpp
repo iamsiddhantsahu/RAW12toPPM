@@ -1,12 +1,17 @@
-#include "PPM.h" 
-#include "RAW12.h"
-#include "Debayer.h"
+#include "RAW12PPM/PPM.h"
+#include "RAW12PPM/RAW12.h"
+#include "Debayer/Debayer.h"
 
 PPM::PPM(Debayer& DebayeredImage, RAW12& RAW12Image)
-	: _width(RAW12Image.get_width()), _height(RAW12Image.get_height()), _total_pixels(RAW12Image.get_total_pixels()),
-	red_channel_12bits(RAW12Image.get_red_channel_16bits()), green1_channel_12bits(RAW12Image.get_green1_channel_16bits()),
-	green2_channel_12bits(RAW12Image.get_green2_channel_16bits()), blue_channel_12bits(RAW12Image.get_blue_channel_16bits()),
-	result_12bits(DebayeredImage.get_result_16bits()) {
+	: _width(RAW12Image.get_width()),
+	_height(RAW12Image.get_height()),
+	_total_pixels(RAW12Image.get_total_pixels()),
+	red_channel_12bits(RAW12Image.get_red_channel_12bits()),
+	green1_channel_12bits(RAW12Image.get_green1_channel_12bits()),
+	green2_channel_12bits(RAW12Image.get_green2_channel_12bits()),
+	blue_channel_12bits(RAW12Image.get_blue_channel_12bits()),
+	buffer_8bits(RAW12Image.get_buffer_8bits()),
+	result_12bits(DebayeredImage.get_result_12bits()) {
 
 }
 
@@ -38,7 +43,7 @@ void PPM::write_pgm(const char* filename, Channel channel) {
 				std::cout << "Started Converting 12bpc to 8bpc\n";
 				for (unsigned long int index = 0; index < (_total_pixels / 4); index++) {
 					red_channel_8bits[index] = (red_channel_12bits[index]) >> 4;
-					//std::cout << (unsigned)result_8bits[index] << " "; 
+					//std::cout << (unsigned)result_8bits[index] << " ";
 				}
 				std::cout << "Converted 12bpc to 8bpc\n";
 
@@ -53,8 +58,9 @@ void PPM::write_pgm(const char* filename, Channel channel) {
 				fprintf(stderr, "%s\n", err);
 				ofs.close();
 			}
+			break;
 
-		case GREEN1: 
+		case GREEN1:
 			if (_width == 0 || _height == 0) {
 				fprintf(stderr, "Can't save an empty image\n");
 			}
@@ -70,7 +76,7 @@ void PPM::write_pgm(const char* filename, Channel channel) {
 				std::cout << "Started Converting 12bpc to 8bpc\n";
 				for (unsigned long int index = 0; index < (_total_pixels / 4); index++) {
 					green1_channel_8bits[index] = (green1_channel_12bits[index]) >> 4;
-					//std::cout << (unsigned)result_8bits[index] << " "; 
+					//std::cout << (unsigned)result_8bits[index] << " ";
 				}
 				std::cout << "Converted 12bpc to 8bpc\n";
 
@@ -85,6 +91,7 @@ void PPM::write_pgm(const char* filename, Channel channel) {
 				fprintf(stderr, "%s\n", err);
 				ofs.close();
 			}
+			break;
 
 		case GREEN2:
 			if (_width == 0 || _height == 0) {
@@ -102,7 +109,7 @@ void PPM::write_pgm(const char* filename, Channel channel) {
 				std::cout << "Started Converting 12bpc to 8bpc\n";
 				for (unsigned long int index = 0; index < (_total_pixels / 4); index++) {
 					green2_channel_8bits[index] = (green2_channel_12bits[index]) >> 4;
-					//std::cout << (unsigned)result_8bits[index] << " "; 
+					//std::cout << (unsigned)result_8bits[index] << " ";
 				}
 				std::cout << "Converted 12bpc to 8bpc\n";
 
@@ -117,6 +124,7 @@ void PPM::write_pgm(const char* filename, Channel channel) {
 				fprintf(stderr, "%s\n", err);
 				ofs.close();
 			}
+			break;
 
 		case BLUE:
 			if (_width == 0 || _height == 0) {
@@ -134,7 +142,7 @@ void PPM::write_pgm(const char* filename, Channel channel) {
 				std::cout << "Started Converting 12bpc to 8bpc\n";
 				for (unsigned long int index = 0; index < (_total_pixels / 4); index++) {
 					green2_channel_8bits[index] = (blue_channel_12bits[index]) >> 4;
-					//std::cout << (unsigned)result_8bits[index] << " "; 
+					//std::cout << (unsigned)result_8bits[index] << " ";
 				}
 				std::cout << "Converted 12bpc to 8bpc\n";
 
@@ -149,7 +157,7 @@ void PPM::write_pgm(const char* filename, Channel channel) {
 				fprintf(stderr, "%s\n", err);
 				ofs.close();
 			}
-
+			break;
 		default:
 			break;
 	} //end of switch
@@ -173,7 +181,7 @@ void PPM::write_ppm(const char* filename) {
 		std::cout << "Started Converting 12bpc to 8bpc\n";
 		for (unsigned long int index = 0; index < (_total_pixels * 3); index++) {
 			result_8bits[index] = (result_12bits[index]) >> 4;
-			//std::cout << (unsigned)result_8bits[index] << " "; 
+			//std::cout << (unsigned)result_8bits[index] << " ";
 		}
 		std::cout << "Converted 12bpc to 8bpc\n";
 

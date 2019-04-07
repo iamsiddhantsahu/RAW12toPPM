@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <stdint.h>
 
 class RAW12 {
 private:
@@ -45,6 +46,9 @@ public:
 	}
 	uint16_t* get_blue_channel_12bits() {
 		return blue_channel_12bits;
+	}
+	uint8_t* get_buffer_8bits() {
+		return buffer_8bits;
 	}
 	~RAW12();
 };

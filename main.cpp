@@ -1,37 +1,35 @@
 #include <iostream>
 #include <fstream>
 
-#include "RAW12.h"
+#include "RAW12PPM/RAW12.h"
+#include "RAW12PPM/PPM.h"
+#include "Debayer/Debayer.h"
 
 int main() {
 
-	RAW12 raw12("portrait-gainx2-offset2047-20ms-02.raw12", 4096, 3072);
+	RAW12 raw12("../data/input.raw12", 4096, 3072);
 	std::cout << "Loaded RAW12 image into 8 bits buffer\n";
 
 	raw12.buffer_8bits_to_12bits();
 	std::cout << "Stored and alligned into a 12 bits buffer\n";
 
-	raw12.seperate_channels();
+	raw12.extract_channels();
 	std::cout << "Separated channels into red, green1, green2, blue\n";
 
-	raw12.debayer_nearest_neighbour();
+	Debayer debayer(raw12);
 	std::cout << "Debayered the RAW12 image\n";
 
-	raw12.write_red_pgm("./new_output/red_channel.pgm");
-	std::cout << "Wrote red channel to disk\n";
+	debayer.debayer_RAW12(NEARESTNEIGHBOUR);
 
-	raw12.write_green1_pgm("./new_output/green1_channel.pgm");
-	std::cout << "Wrote green1 channel to disk\n";
+	PPM ppm(debayer, raw12);
+	ppm.print_5X5();
+	ppm.write_pgm("../result/red.pgm", RED);
+	ppm.write_pgm("../result/green1.pgm", GREEN1);
+	ppm.write_pgm("../result/green2.pgm", GREEN2);
+	ppm.write_pgm("../result/blue.pgm", BLUE);
 
-	raw12.write_green2_pgm("./new_output/green2_channel.pgm");
-	std::cout << "Wrote green2 channel to disk\n";
+	ppm.write_ppm("../result/colored_neigh_test.ppm");
 
-	raw12.write_blue_pgm("./new_output/blue_channel.pgm");
-	std::cout << "Wrote blue channel to disk\n";
 
-	raw12.write_ppm("./new_output/debayered_nearest_neighbour.ppm");
-	std::cout << "Wrote debayerred PPM image to disk\n";
-
-	std::cin.get();
 	return 0;
 }
