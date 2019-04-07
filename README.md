@@ -12,3 +12,13 @@ This repository extracts 4 channels (red, green1, green2 and blue) from a RAW12 
 - [ ] Abide by C/CPP coding guidlines and project structuring (https://gist.github.com/lefticus/10191322)
 - [ ] Load a part of program as dynamic library (.so file)
 - [ ] Use non linear curve for 12 bits to 8bits conversion
+
+### Build Instructions
+```
+mkdir result
+mkdir build
+cd build
+cmake ..
+make
+./run
+```
