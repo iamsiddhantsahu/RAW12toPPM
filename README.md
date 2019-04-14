@@ -22,3 +22,10 @@ cmake ..
 make
 ./run
 ```
+### Debayering Algorithm Comparison
+
+Bilinear                   |  Nearest Neighbour
+:-------------------------:|:-------------------------:
+<img src="https://drive.google.com/uc?export=view&id=1Gi5BYspwMC169NZ9BKIA-vacbk-EpUsu" width="400">  |  <img src="https://drive.google.com/uc?export=view&id=1g3L0NRcnk0svcdVnBnP4Y2BHN8DpsvN8" width="400">
+
+**Notice the subtle aliasing effect for Nearest Neighbour near the horizontal lines of steel rod**
