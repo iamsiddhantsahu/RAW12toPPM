@@ -22,6 +22,11 @@ cmake ..
 make
 ./run
 ```
+
+For windows with MSVC compiler
+```
+cmake -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=TRUE ..
+```
 ### Debayering Algorithm Comparison
 
 Bilinear                   |  Nearest Neighbour
